@@ -1,0 +1,25 @@
+port: 8080
+bind: 127.0.0.1
+timeout: 3000
+cors:
+  allow_origins:
+    - "*"
+openapi:
+  server_url: http://localhost:8080
+  docs_path: /docs
+  spec_path: /openapi
+logger:
+  level: warn
+  json: true
+orm:
+  auto_migrate: false
+  log_level: off
+  mysql:
+    dsn:
+    max_idle_conns: 20
+    max_open_conns: 200
+kafka:
+  brokers: 
+    - 127.0.0.1:9092
+  username:
+  password:

@@ -1,0 +1,6 @@
+Place packages that require exporting here, such as:
+
+DomainEvents
+RestClients
+etc.
+

@@ -1,0 +1,153 @@
+components:
+  schemas:
+    ErrorResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+            - http://localhost:8080/schemas/ErrorResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        error:
+          type: string
+        message:
+          type: string
+        metadata:
+          additionalProperties:
+            type: string
+          type: object
+        reason:
+          type: string
+      type: object
+    ResponseListUser:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+            - http://localhost:8080/schemas/ResponseListUser.json
+          format: uri
+          readOnly: true
+          type: string
+        data:
+          items:
+            $ref: "#/components/schemas/User"
+          type:
+            - array
+            - "null"
+      required:
+        - data
+      type: object
+    User:
+      additionalProperties: false
+      properties:
+        age:
+          format: int64
+          type: integer
+        birthday:
+          examples:
+            - "1987-11-29"
+          format: date
+          type: string
+        id:
+          format: int64
+          minimum: 0
+          type: integer
+        name:
+          type: string
+      required:
+        - id
+        - name
+        - birthday
+        - age
+      type: object
+info:
+  contact:
+    email: user@example.com
+    name: Owner
+  title: API Document-dev
+  version: "1.0"
+openapi: 3.1.0
+paths:
+  /api/v1/users:
+    get:
+      description: Query users by key.
+      operationId: query-users
+      parameters:
+        - description: Search key for user name
+          explode: false
+          in: query
+          name: key
+          required: true
+          schema:
+            description: Search key for user name
+            minLength: 1
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseListUser"
+          description: OK
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Unprocessable Entity
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal Server Error
+      summary: Query users.
+      tags:
+        - User
+  /api/v1/users/unsafe-timeout:
+    get:
+      description: Query users by key and demonstrate a one-second request timeout.
+      operationId: query-users-timeout-demo
+      parameters:
+        - description: Search key for user name
+          explode: false
+          in: query
+          name: key
+          required: true
+          schema:
+            description: Search key for user name
+            minLength: 1
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseListUser"
+          description: OK
+        "408":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Request Timeout
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Unprocessable Entity
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal Server Error
+      summary: Query users. (Timeout Demo)
+      tags:
+        - User
+servers:
+  - url: http://localhost:8080

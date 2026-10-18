@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package schema;
+
+option go_package = "github.com/loopopen/t-ddd-gin-huma-gorm/pkg/schema;schema";
+
+enum ErrorReason {
+    UNSPECIFIED = 0;
+    FRAMEWORK_ERROR = 1;
+
+    INVALID_IDEMPOTENCY_KEY = 401;
+    INVALID_REQUEST_FIELDS = 402;
+    NIL_ARGUMENT = 501;
+}
+
