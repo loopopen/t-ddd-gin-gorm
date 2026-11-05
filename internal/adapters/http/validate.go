@@ -5,7 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
-	"github.com/loopopen/t-ddd-gin-huma-gorm/pkg/schema/errx"
+	"github.com/loopopen/t-ddd-gin-gorm/pkg/schema/errx"
 )
 
 type From int32

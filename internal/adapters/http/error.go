@@ -8,56 +8,66 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/gin-gonic/gin"
-	pkgerrorx "github.com/loopopen/pkg/errorx"
+	"github.com/loopopen/pkg/errorx"
 	"github.com/loopopen/pkg/slogx"
-	"github.com/loopopen/t-ddd-gin-huma-gorm/internal/adapters/http/dto"
-	"github.com/loopopen/t-ddd-gin-huma-gorm/pkg/schema/errx"
+	"github.com/loopopen/t-ddd-gin-gorm/internal/adapters/http/dto"
+	"github.com/loopopen/t-ddd-gin-gorm/pkg/schema/errx"
 )
 
-type ErrorHandler func(error) huma.StatusError
+// ErrorHandler collects errors added through c.Error and writes the API error
+// response after the remaining handlers have run.
+func ErrorHandler(logger *slog.Logger) gin.HandlerFunc {
+	logger = slogx.Within(logger, ErrorHandler)
 
-func HandlerError(logger *slog.Logger) ErrorHandler {
-	logger = slogx.Within(logger, HandlerError)
-
-	return func(theErr error) huma.StatusError {
-		var appErr *pkgerrorx.Error
-		if !errors.As(theErr, &appErr) {
-			appErr = errx.ErrUnspecified.WithCause(theErr)
-		}
-		if appErr.Code >= http.StatusInternalServerError {
-			logger.Error("request failed", slog.Any("err", theErr))
-		}
-		return dto.Err(appErr)
-	}
-}
-
-func NewHumaError(status int, message string, details ...error) huma.StatusError {
-	metadata := make(map[string]string, len(details))
-	for i, detail := range details {
-		if detail != nil {
-			metadata[fmt.Sprintf("error_%d", i+1)] = detail.Error()
-		}
-	}
-	return dto.NewError(status, "FRAMEWORK_ERROR", message, "", metadata)
-}
-
-func ErrorMiddleware(logger *slog.Logger) gin.HandlerFunc {
-	handle := HandlerError(logger)
 	return func(c *gin.Context) {
 		defer func() {
 			if recovered := recover(); recovered != nil {
-				writeGinError(c, handle(fmt.Errorf("panic: %v", recovered)))
+				writeGinError(c, toErrorResponse(logger, fmt.Errorf("panic: %v", recovered)))
 			}
 		}()
 
 		c.Next()
-		if !c.Writer.Written() && len(c.Errors) > 0 {
-			writeGinError(c, handle(c.Errors.Last().Err))
+		if len(c.Errors) > 0 {
+			writeGinError(c, toErrorResponse(logger, c.Errors.Last().Err))
 		}
 	}
 }
 
-func writeGinError(c *gin.Context, err huma.StatusError) {
+func toErrorResponse(logger *slog.Logger, theErr error) *dto.ErrorResponse {
+	var appErr *errorx.Error
+	if !errors.As(theErr, &appErr) {
+		appErr = errx.ErrUnspecified.WithCause(theErr)
+	}
+	if appErr.Code >= http.StatusInternalServerError {
+		logger.Error("request failed", slog.Any("err", theErr))
+	}
+	return dto.Err(appErr)
+}
+
+// newHumaError configures Huma's global error factory for this API. Returned
+// application errors retain their status code and API error envelope.
+func newHumaError(logger *slog.Logger) func(int, string, ...error) huma.StatusError {
+	logger = slogx.Within(logger, newHumaError)
+
+	return func(status int, message string, details ...error) huma.StatusError {
+		for _, detail := range details {
+			var appErr *errorx.Error
+			if errors.As(detail, &appErr) {
+				return toErrorResponse(logger, detail)
+			}
+		}
+
+		metadata := make(map[string]string, len(details))
+		for i, detail := range details {
+			if detail != nil {
+				metadata[fmt.Sprintf("error_%d", i+1)] = detail.Error()
+			}
+		}
+		return dto.NewError(status, "FRAMEWORK_ERROR", message, "", metadata)
+	}
+}
+
+func writeGinError(c *gin.Context, err *dto.ErrorResponse) {
 	if c.Writer.Written() {
 		return
 	}

@@ -14,10 +14,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"github.com/loopopen/pkg/confx"
 	"github.com/loopopen/pkg/x"
-	"github.com/loopopen/t-ddd-gin-huma-gorm/cmd/api/config"
+	"github.com/loopopen/t-ddd-gin-gorm/cmd/api/config"
 )
 
 var commitSHA string
@@ -47,11 +46,10 @@ func main() {
 
 	logger := newLogger(c.Logger)
 
-	var app *gin.Engine
-	app = x.Must(wireApp(ctx, &env, &c, c.Gap, c.Kafka, c.ORM, logger))
+	app := x.Must(wireApp(&env, &c, c.Gap, c.Kafka, c.ORM, logger))
 	server := &http.Server{
 		Addr:    fmt.Sprintf("%s:%d", c.Bind, c.Port),
-		Handler: app,
+		Handler: app.Engine,
 	}
 
 	go func() {
@@ -77,6 +75,11 @@ func main() {
 	defer cancel()
 	if err := server.Shutdown(shutdownCtx); err != nil {
 		logger.Warn("server shutdown with error", slog.Any("err", err))
+		os.Exit(1)
+	}
+
+	if err := app.ShutdownGap(); err != nil {
+		logger.Warn("gap shutdown with error", slog.Any("err", err))
 		os.Exit(1)
 	}
 

@@ -1,6 +1,6 @@
 # 
 
-## This project is generated from template `t-ddd-gin-huma-gorm`.
+## This project is generated from template `t-ddd-gin-gorm`.
 
 ## 1. Manage Go versions with goenv (recommended).
 
@@ -65,7 +65,7 @@ go install golang.org/x/tools/cmd/gonew@latest
 ### 2. Use this template to create your project.
 ```sh
 mkdir <app-name> && \
-gonew github.com/loopopen/t-ddd-gin-huma-gorm@<version> github.com/<org-name>/<app-name> ./<app-name>
+gonew github.com/loopopen/t-ddd-gin-gorm@<version> github.com/<org-name>/<app-name> ./<app-name>
 make tidy
 ```
 

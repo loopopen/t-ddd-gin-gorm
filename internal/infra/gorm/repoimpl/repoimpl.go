@@ -1,7 +1,7 @@
 package repoimpl
 
 import (
-	"github.com/loopopen/t-ddd-gin-huma-gorm/internal/domain/repo"
+	"github.com/loopopen/t-ddd-gin-gorm/internal/domain/repo"
 
 	"github.com/google/wire"
 )

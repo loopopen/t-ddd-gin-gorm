@@ -3,7 +3,7 @@ package repo
 import (
 	"context"
 
-	"github.com/loopopen/t-ddd-gin-huma-gorm/internal/domain/entity"
+	"github.com/loopopen/t-ddd-gin-gorm/internal/domain/entity"
 )
 
 type Repo[Tid entity.ID, T any, Te entity.EntityConstraint[Tid, T]] interface {

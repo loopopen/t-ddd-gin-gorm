@@ -3,9 +3,9 @@ package gorm
 import (
 	"fmt"
 
-	tginhumagorm "github.com/loopopen/t-ddd-gin-huma-gorm"
-	"github.com/loopopen/t-ddd-gin-huma-gorm/internal/infra/conf"
-	"github.com/loopopen/t-ddd-gin-huma-gorm/internal/infra/gorm/migrate"
+	tginhumagorm "github.com/loopopen/t-ddd-gin-gorm"
+	"github.com/loopopen/t-ddd-gin-gorm/internal/infra/conf"
+	"github.com/loopopen/t-ddd-gin-gorm/internal/infra/gorm/migrate"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"

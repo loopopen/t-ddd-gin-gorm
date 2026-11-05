@@ -4,7 +4,7 @@ import (
 	"log/slog"
 
 	"github.com/loopopen/gap/broker/xkafka"
-	"github.com/loopopen/t-ddd-gin-huma-gorm/internal/infra/conf"
+	"github.com/loopopen/t-ddd-gin-gorm/internal/infra/conf"
 )
 
 type Env struct {

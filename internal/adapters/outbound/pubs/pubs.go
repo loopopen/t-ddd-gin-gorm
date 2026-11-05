@@ -1,35 +1,37 @@
 package pubs
 
 import (
-	"context"
-	"log/slog"
-
 	"github.com/loopopen/gap"
 	"github.com/loopopen/gap/broker/xkafka"
 	"github.com/loopopen/gap/dashboard"
 	"github.com/loopopen/gap/storage/xgorm"
-	tginhumagorm "github.com/loopopen/t-ddd-gin-huma-gorm"
-	"github.com/loopopen/t-ddd-gin-huma-gorm/cmd/api/config"
+	tginhumagorm "github.com/loopopen/t-ddd-gin-gorm"
+	"github.com/loopopen/t-ddd-gin-gorm/cmd/api/config"
 
 	"gorm.io/gorm"
 )
 
-func NewPub(
-	ctx context.Context,
-	g config.Gap,
-	k xkafka.Options,
-	db *gorm.DB,
-	log *slog.Logger,
-) gap.EventPublisher {
+func NewGap(g config.Gap, db *gorm.DB) *gap.Gap {
 	if tginhumagorm.HAVE_NOT_BEEN_DELETED_YET {
 		return nil
 	}
 
-	pub := gap.NewEventPublisher(
-		gap.WithDrain(ctx, 5),
+	return gap.New(
 		xgorm.UseGorm(
 			xgorm.DB(db),
 		),
+		gap.UseDashboard(
+			dashboard.LocationPath(g.Location),
+		),
+	)
+}
+
+func NewPub(g *gap.Gap, k xkafka.Options) gap.EventPublisher {
+	if g == nil {
+		return nil
+	}
+
+	return g.NewEventPublisher(
 		xkafka.UseKafka(
 			xkafka.Brokers(k.Brokers),
 			xkafka.ConfigTopic(
@@ -37,9 +39,5 @@ func NewPub(
 			// xkafka.ReplicationFactor(3),
 			),
 		),
-		gap.UseDashboard(
-			dashboard.LocationPath(g.Location),
-		),
 	)
-	return pub
 }

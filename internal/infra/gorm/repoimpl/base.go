@@ -3,10 +3,10 @@ package repoimpl
 import (
 	"context"
 
-	"github.com/loopopen/t-ddd-gin-huma-gorm/internal/domain/entity"
-	"github.com/loopopen/t-ddd-gin-huma-gorm/internal/domain/repo"
-	"github.com/loopopen/t-ddd-gin-huma-gorm/internal/infra"
-	"github.com/loopopen/t-ddd-gin-huma-gorm/pkg/schema/errx"
+	"github.com/loopopen/t-ddd-gin-gorm/internal/domain/entity"
+	"github.com/loopopen/t-ddd-gin-gorm/internal/domain/repo"
+	"github.com/loopopen/t-ddd-gin-gorm/internal/infra"
+	"github.com/loopopen/t-ddd-gin-gorm/pkg/schema/errx"
 	"gorm.io/gorm"
 )
 

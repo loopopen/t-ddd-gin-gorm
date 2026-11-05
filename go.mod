@@ -1,4 +1,4 @@
-module github.com/loopopen/t-ddd-gin-huma-gorm
+module github.com/loopopen/t-ddd-gin-gorm
 
 go 1.25.0
 
@@ -16,12 +16,12 @@ require (
 	github.com/gin-gonic/gin v1.12.0
 	github.com/go-playground/validator/v10 v10.30.3
 	github.com/google/wire v0.7.0
-	github.com/loopopen/gap v0.3.0-beta.3
-	github.com/loopopen/gap/broker/xkafka v0.3.0-beta.3
-	github.com/loopopen/gap/storage/xgorm v0.3.0-beta.4
+	github.com/loopopen/gap v1.0.0-beta.3
+	github.com/loopopen/gap/broker/xkafka v1.0.0-beta.3
+	github.com/loopopen/gap/storage/xgorm v1.0.0-beta.3
 	github.com/loopopen/pkg v0.0.1
-	github.com/loopopen/shoot v0.9.0
-	google.golang.org/protobuf v1.36.11
+	github.com/loopopen/shoot v1.0.0
+	google.golang.org/protobuf v1.36.12
 	gorm.io/driver/mysql v1.6.0
 	gorm.io/gorm v1.31.1
 )
@@ -33,6 +33,7 @@ require (
 	github.com/bytedance/sonic v1.15.2 // indirect
 	github.com/bytedance/sonic/loader v0.5.1 // indirect
 	github.com/cloudwego/base64x v0.1.7 // indirect
+	github.com/docker/go-units v0.5.0 // indirect
 	github.com/fsnotify/fsnotify v1.9.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.13 // indirect
 	github.com/gin-contrib/sse v1.1.1 // indirect

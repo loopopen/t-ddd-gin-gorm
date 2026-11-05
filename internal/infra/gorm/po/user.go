@@ -3,8 +3,8 @@ package po
 import (
 	"time"
 
-	"github.com/loopopen/t-ddd-gin-huma-gorm/internal/domain/entity"
-	"github.com/loopopen/t-ddd-gin-huma-gorm/internal/domain/enum"
+	"github.com/loopopen/t-ddd-gin-gorm/internal/domain/entity"
+	"github.com/loopopen/t-ddd-gin-gorm/internal/domain/enum"
 
 	"gorm.io/gorm"
 )

@@ -1,4 +1,4 @@
-module github.com/loopopen/t-ddd-gin-huma-gorm
+module github.com/loopopen/t-ddd-gin-gorm
 
 go 1.25.0
 
@@ -11,12 +11,12 @@ require (
 	github.com/gin-gonic/gin v1.12.0
 	github.com/go-playground/validator/v10 v10.30.3
 	github.com/google/wire v0.7.0
-	github.com/loopopen/gap v0.3.0-beta.3
-	github.com/loopopen/gap/broker/xkafka v0.3.0-beta.3
-	github.com/loopopen/gap/storage/xgorm v0.3.0-beta.4
+	github.com/loopopen/gap v1.0.0-beta.3
+	github.com/loopopen/gap/broker/xkafka v1.0.0-beta.3
+	github.com/loopopen/gap/storage/xgorm v1.0.0-beta.3
 	github.com/loopopen/pkg v0.0.1
-	github.com/loopopen/shoot v0.9.0
-	google.golang.org/protobuf v1.36.11
+	github.com/loopopen/shoot v1.0.0
+	google.golang.org/protobuf v1.36.12
 	gorm.io/driver/mysql v1.6.0
 	gorm.io/gorm v1.31.1
 )
@@ -77,6 +77,7 @@ require (
 	github.com/cockroachdb/cockroach-go/v2 v2.1.1 // indirect
 	github.com/cznic/mathutil v0.0.0-20180504122225-ca4c9f2c1369 // indirect
 	github.com/danieljoos/wincred v1.1.2 // indirect
+	github.com/docker/go-units v0.5.0 // indirect
 	github.com/dvsekhvalnov/jose2go v1.7.0 // indirect
 	github.com/edsrzf/mmap-go v0.0.0-20170320065105-0bce6a688712 // indirect
 	github.com/envoyproxy/go-control-plane/envoy v1.37.0 // indirect

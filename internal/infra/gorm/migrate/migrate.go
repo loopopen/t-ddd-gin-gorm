@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/loopopen/t-ddd-gin-huma-gorm/internal/infra/gorm/po"
+	"github.com/loopopen/t-ddd-gin-gorm/internal/infra/gorm/po"
 
 	"gorm.io/gorm"
 )

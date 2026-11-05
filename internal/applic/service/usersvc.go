@@ -5,10 +5,10 @@ import (
 	"log/slog"
 
 	"github.com/loopopen/pkg/slogx"
-	"github.com/loopopen/t-ddd-gin-huma-gorm/internal/applic/query"
-	"github.com/loopopen/t-ddd-gin-huma-gorm/internal/applic/result"
-	"github.com/loopopen/t-ddd-gin-huma-gorm/internal/domain/event"
-	"github.com/loopopen/t-ddd-gin-huma-gorm/internal/domain/repo"
+	"github.com/loopopen/t-ddd-gin-gorm/internal/applic/query"
+	"github.com/loopopen/t-ddd-gin-gorm/internal/applic/result"
+	"github.com/loopopen/t-ddd-gin-gorm/internal/domain/event"
+	"github.com/loopopen/t-ddd-gin-gorm/internal/domain/repo"
 
 	"github.com/loopopen/gap"
 	"gorm.io/gorm"

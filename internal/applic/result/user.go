@@ -2,8 +2,8 @@ package result
 
 import (
 	"github.com/loopopen/pkg/timex"
-	"github.com/loopopen/t-ddd-gin-huma-gorm/internal/domain/entity"
-	"github.com/loopopen/t-ddd-gin-huma-gorm/internal/infra"
+	"github.com/loopopen/t-ddd-gin-gorm/internal/domain/entity"
+	"github.com/loopopen/t-ddd-gin-gorm/internal/infra"
 )
 
 //go:generate go tool shoot new -json -file=$GOFILE

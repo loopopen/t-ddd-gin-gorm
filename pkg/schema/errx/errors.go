@@ -2,7 +2,7 @@ package errx
 
 import (
 	"github.com/loopopen/pkg/errorx"
-	"github.com/loopopen/t-ddd-gin-huma-gorm/pkg/schema"
+	"github.com/loopopen/t-ddd-gin-gorm/pkg/schema"
 )
 
 func FrameworkErr(status int, message string) *errorx.Error {
@@ -21,3 +21,4 @@ var ErrInvalidIdempotencyKey = errorx.BadRequest(schema.ErrorReason_INVALID_IDEM
 var ErrInvalidRequestFields = errorx.BadRequest(schema.ErrorReason_INVALID_REQUEST_FIELDS.String(), "invalid request fields")
 
 var ErrNilArgument = errorx.InternalServer(schema.ErrorReason_NIL_ARGUMENT.String(), "nil argument")
+var ErrServiceTimeout = errorx.GatewayTimeout(schema.ErrorReason_SERVICE_TIMEOUT.String(), "service timeout")

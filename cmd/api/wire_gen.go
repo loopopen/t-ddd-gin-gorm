@@ -7,26 +7,25 @@
 package main
 
 import (
-	"context"
-	"github.com/gin-gonic/gin"
 	"github.com/loopopen/gap/broker/xkafka"
-	"github.com/loopopen/t-ddd-gin-huma-gorm/cmd/api/config"
-	"github.com/loopopen/t-ddd-gin-huma-gorm/internal/adapters/http"
-	"github.com/loopopen/t-ddd-gin-huma-gorm/internal/adapters/outbound/pubs"
-	"github.com/loopopen/t-ddd-gin-huma-gorm/internal/applic/service"
-	"github.com/loopopen/t-ddd-gin-huma-gorm/internal/infra/conf"
-	"github.com/loopopen/t-ddd-gin-huma-gorm/internal/infra/gorm"
-	"github.com/loopopen/t-ddd-gin-huma-gorm/internal/infra/gorm/repoimpl"
+	"github.com/loopopen/t-ddd-gin-gorm/cmd/api/config"
+	"github.com/loopopen/t-ddd-gin-gorm/internal/adapters/http"
+	"github.com/loopopen/t-ddd-gin-gorm/internal/adapters/outbound/pubs"
+	"github.com/loopopen/t-ddd-gin-gorm/internal/applic/service"
+	"github.com/loopopen/t-ddd-gin-gorm/internal/infra/conf"
+	"github.com/loopopen/t-ddd-gin-gorm/internal/infra/gorm"
+	"github.com/loopopen/t-ddd-gin-gorm/internal/infra/gorm/repoimpl"
 	"log/slog"
 )
 
 // Injectors from wire.go:
 
-func wireApp(ctx context.Context, e *config.Env, c *config.Config, g config.Gap, k xkafka.Options, orm conf.ORM, log *slog.Logger) (*gin.Engine, error) {
+func wireApp(e *config.Env, c *config.Config, g config.Gap, k xkafka.Options, orm conf.ORM, log *slog.Logger) (*http.App, error) {
 	db := gorm.NewGormDB(orm)
-	v := pubs.NewPub(ctx, g, k, db, log)
+	gap := pubs.NewGap(g, db)
+	v := pubs.NewPub(gap, k)
 	userRepo := repoimpl.NewUserRepo(log, db)
 	userSvc := service.NewUserSvc(log, db, v, userRepo)
-	engine := http.NewApp(e, c, userSvc, v, log)
-	return engine, nil
+	app := http.NewApp(e, c, userSvc, gap, v, log)
+	return app, nil
 }

@@ -80,7 +80,7 @@ push:
 
 tidy:
 	go mod tidy
-	go mod edit -modfile=tools.mod -module=$$(go list -m)
-	go list -m -f '{{if and (not .Indirect) (not .Main) .Version}}{{.Path}}@{{.Version}}{{end}}' all | xargs -r go get -modfile=tools.mod
+	@go mod edit -modfile=tools.mod -module=$$(go list -m)
+	@go list -m -f '{{if and (not .Indirect) (not .Main) .Version}}{{.Path}}@{{.Version}}{{end}}' all | xargs -r go get -modfile=tools.mod
 	go mod tidy -modfile=tools.mod
 

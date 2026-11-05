@@ -8,10 +8,10 @@ import (
 	"time"
 
 	"github.com/loopopen/pkg/slogx"
-	"github.com/loopopen/t-ddd-gin-huma-gorm/internal/domain/entity"
-	"github.com/loopopen/t-ddd-gin-huma-gorm/internal/domain/enum"
-	"github.com/loopopen/t-ddd-gin-huma-gorm/internal/domain/repo"
-	"github.com/loopopen/t-ddd-gin-huma-gorm/internal/infra/gorm/po"
+	"github.com/loopopen/t-ddd-gin-gorm/internal/domain/entity"
+	"github.com/loopopen/t-ddd-gin-gorm/internal/domain/enum"
+	"github.com/loopopen/t-ddd-gin-gorm/internal/domain/repo"
+	"github.com/loopopen/t-ddd-gin-gorm/internal/infra/gorm/po"
 	"gorm.io/gorm"
 )
 

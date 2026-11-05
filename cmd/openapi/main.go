@@ -5,8 +5,8 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/loopopen/t-ddd-gin-huma-gorm/cmd/api/config"
-	apihttp "github.com/loopopen/t-ddd-gin-huma-gorm/internal/adapters/http"
+	"github.com/loopopen/t-ddd-gin-gorm/cmd/api/config"
+	apihttp "github.com/loopopen/t-ddd-gin-gorm/internal/adapters/http"
 )
 
 func main() {

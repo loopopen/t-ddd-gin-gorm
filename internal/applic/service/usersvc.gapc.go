@@ -8,13 +8,12 @@ import (
 
 	"github.com/loopopen/gap"
 	"github.com/loopopen/gap/gapc"
-	"github.com/loopopen/t-ddd-gin-huma-gorm/internal/domain/event"
+	"github.com/loopopen/t-ddd-gin-gorm/internal/domain/event"
 )
 
 func init() {
 	var _svc *UserSvc
-	gap.Subscribe(
-		gapc.GoGenerated(),
+	gap.Register(
 		gapc.Resolve(
 			gapc.FuncName("service.HandlerUserCreated"),
 			gapc.ResolveType("*UserSvc", func(v *UserSvc) { _svc = v }),
@@ -34,7 +33,7 @@ func init() {
 				return nil
 			},
 			new(event.UserCreated).Topic(),
-			"github.com.loopopen.t-ddd-gin-huma-gorm",
+			"github.com.loopopen.t-ddd-gin-gorm",
 		),
 	)
 }

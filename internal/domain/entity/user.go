@@ -3,7 +3,7 @@ package entity
 import (
 	"time"
 
-	"github.com/loopopen/t-ddd-gin-huma-gorm/internal/domain/enum"
+	"github.com/loopopen/t-ddd-gin-gorm/internal/domain/enum"
 )
 
 //go:generate go tool shoot new -getset -file=$GOFILE
