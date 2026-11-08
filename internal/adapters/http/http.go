@@ -19,7 +19,6 @@ import (
 	"github.com/loopopen/t-ddd-gin-gorm/cmd/api/config"
 	"github.com/loopopen/t-ddd-gin-gorm/internal/adapters/http/dto"
 	"github.com/loopopen/t-ddd-gin-gorm/internal/adapters/http/handlers"
-	v1 "github.com/loopopen/t-ddd-gin-gorm/internal/adapters/http/handlers/v1"
 	"github.com/loopopen/t-ddd-gin-gorm/internal/applic/service"
 	"github.com/loopopen/t-ddd-gin-gorm/pkg/schema/errx"
 )
@@ -99,16 +98,7 @@ func registerAPI(app *gin.Engine, e *config.Env, c *config.Config, userSvc *serv
 	api := humagin.New(app, hc)
 	huma.NewError = newHumaError(logger)
 
-	huma.Register(api, huma.Operation{
-		OperationID:  "query-users",
-		Method:       http.MethodGet,
-		Path:         "/api/v1/users",
-		Summary:      "Query users.",
-		Description:  "Query users by key.",
-		Tags:         []string{"User"},
-		Errors:       []int{http.StatusInternalServerError},
-		MaxBodyBytes: maxBodyBytes,
-	}, withTimeout(0*time.Second, v1.QueryUsers(userSvc)))
+	registerUserAPI(api, userSvc)
 
 	return api
 }

@@ -22,6 +22,13 @@ import (
 var commitSHA string
 var f = flag.String("f", "etc/config.yaml", "config file")
 
+const (
+	readHeaderTimeout = 5 * time.Second
+	readTimeout       = 15 * time.Second
+	writeTimeout      = 15 * time.Second
+	idleTimeout       = 60 * time.Second
+)
+
 func main() {
 	flag.Parse()
 
@@ -44,46 +51,50 @@ func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
 
-	logger := newLogger(c.Logger)
+	slogger := newLogger(c.Logger)
 
-	app := x.Must(wireApp(&env, &c, c.Gap, c.Kafka, c.ORM, logger))
+	app := x.Must(wireApp(&env, &c, c.Gap, c.Kafka, c.ORM, slogger))
 	server := &http.Server{
-		Addr:    fmt.Sprintf("%s:%d", c.Bind, c.Port),
-		Handler: app.Engine,
+		Addr:              fmt.Sprintf("%s:%d", c.Bind, c.Port),
+		Handler:           app.Engine,
+		ReadHeaderTimeout: readHeaderTimeout,
+		ReadTimeout:       readTimeout,
+		WriteTimeout:      writeTimeout,
+		IdleTimeout:       idleTimeout,
 	}
 
 	go func() {
 		err := server.ListenAndServe()
 		if err != nil && !errors.Is(err, http.ErrServerClosed) {
-			logger.Error("server stop listening with error", slog.Any("err", err))
+			slogger.Error("server stop listening with error", slog.Any("err", err))
 			os.Exit(1)
 		}
 	}()
 
 	<-ctx.Done()
-	logger.Info("shutting down gracefully, press Ctrl+C again to force")
+	slogger.Info("shutting down gracefully, press Ctrl+C again to force")
 
 	go func() {
 		sigChan := make(chan os.Signal, 1)
 		signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
 		<-sigChan
-		logger.Warn("forced shutdown by user, exiting immediately")
+		slogger.Warn("forced shutdown by user, exiting immediately")
 		os.Exit(1)
 	}()
 
 	shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	if err := server.Shutdown(shutdownCtx); err != nil {
-		logger.Warn("server shutdown with error", slog.Any("err", err))
+		slogger.Warn("server shutdown with error", slog.Any("err", err))
 		os.Exit(1)
 	}
 
 	if err := app.ShutdownGap(); err != nil {
-		logger.Warn("gap shutdown with error", slog.Any("err", err))
+		slogger.Warn("gap shutdown with error", slog.Any("err", err))
 		os.Exit(1)
 	}
 
-	logger.Info("server shutdown successfully")
+	slogger.Info("server shutdown successfully")
 }
 
 func newLogger(c config.Logger) *slog.Logger {

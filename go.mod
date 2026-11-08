@@ -1,6 +1,6 @@
 module github.com/loopopen/t-ddd-gin-gorm
 
-go 1.25.0
+go 1.27.0
 
 tool (
 	github.com/google/wire/cmd/wire

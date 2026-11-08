@@ -1,11 +1,11 @@
-.PHONY: test doc wire run gen build tidy proto push
+.PHONY: test lint doc wire run gen build tidy proto push
 
 MODULE   		:= $(shell go list -m)
 APP_NAME 		:= $(notdir $(MODULE))
 ORG_NAME 		:= $(notdir $(patsubst %/$(APP_NAME),%,$(MODULE)))
 
 IMAGE_BASE 		:= ${ORG_NAME}/${APP_NAME}
-REGISTRY   		:= docker.io
+REGISTRY   		?=
 GIT_SHORT_SHA 	:= $(shell git describe --always --dirty 2>/dev/null || echo "dirty")
 
 wire:
@@ -64,8 +64,18 @@ run:
 
 tag 		?= ${GIT_SHORT_SHA}
 config		?= debug
-IMAGE_FULL 	:= $(REGISTRY)/$(IMAGE_BASE):$(tag)
+IMAGE_REPOSITORY := $(if $(REGISTRY),$(REGISTRY)/)$(IMAGE_BASE)
+IMAGE_FULL 	:= $(IMAGE_REPOSITORY):$(tag)
 IMAGE_URL 	:= docker://$(IMAGE_FULL)
+
+lint:
+	@test -z "$$(gofmt -l $$(find . -type f -name '*.go' -not -path './vendor/*'))" || \
+		(echo "Go files must be formatted"; exit 1)
+	go vet ./...
+	go mod tidy -diff
+
+test:
+	go test -race ./...
 
 build:
 	docker build \
