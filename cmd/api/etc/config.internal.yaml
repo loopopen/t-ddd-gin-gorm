@@ -7,11 +7,13 @@ logger:
   level: debug
   json: false
 orm:
-  auto_migrate: false
+  auto_migrate: true
   log_level: debug
   mysql:
     dsn: root:root@tcp(mariadb:3306)/debug?charset=utf8mb4&parseTime=True&loc=Local
 kafka:
   brokers:
-    - kafka:9092
+    - kafka:29092
+  username: kafka
+  password: kafka
 

@@ -50,7 +50,7 @@ FROM runtime-base AS debug
 COPY --from=build-debug --chown=app:app /app/main ./main
 COPY --from=build-debug --chown=app:app /app/dlv ./dlv
 EXPOSE 40000
-CMD ["./dlv", "--listen=:40000", "--headless=true", "--api-version=2", "--accept-multiclient", "exec", "./main"]
+CMD ["./dlv", "exec", "--headless=true", "--listen=:40000", "--api-version=2", "--accept-multiclient", "--continue", "./main"]
 
 FROM release AS final
 

@@ -10,8 +10,10 @@ services:
         COMMIT_SHA: ${COMMIT_SHA-dirty}
     container_name: ${ORG_NAME}-${APP_NAME}-debug
     depends_on:
-      - mariadb
-      - kafka
+      mariadb:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
     environment:
       - APP_ENV=${APP_ENV-internal}
       - APP_ORM_MYSQL_DSN=${APP_ORM_MYSQL_DSN}
@@ -38,6 +40,12 @@ services:
       - ${MYSQL_PORT-3306}:3306
     volumes:
       - mysqldata:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mariadb-admin ping --host=localhost --user=root --password=\"$$MYSQL_ROOT_PASSWORD\" --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
     networks:
       - debug-net
 
@@ -64,12 +72,25 @@ services:
     volumes:
       - kafka-data:/var/lib/kafka/data
       - kafka-log:/var/log/kafka
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >-
+          printf 'security.protocol=SASL_PLAINTEXT\nsasl.mechanism=PLAIN\nsasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="${KAFKA_USERNAME-kafka}" password="${KAFKA_PASSWORD-kafka}";\n' > /tmp/healthcheck.properties
+          && /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --command-config /tmp/healthcheck.properties --list >/dev/null 2>&1
+      interval: 5s
+      timeout: 10s
+      retries: 12
+      start_period: 30s
     networks:
       debug-net:
 
   kafka-ui:
-    container_name: ${ORG_NAME}-${APP_NAME}-debug-kafka-ui
     image: ghcr.io/kafbat/kafka-ui:v1.5.0
+    container_name: ${ORG_NAME}-${APP_NAME}-debug-kafka-ui
+    depends_on:
+      kafka:
+        condition: service_healthy
     ports:
       - ${KAFKA_UI_PORT-8888}:8080
     environment:

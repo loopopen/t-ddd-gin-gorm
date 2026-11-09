@@ -34,6 +34,8 @@ func NewPub(g *gap.Gap, k xkafka.Options) gap.EventPublisher {
 	return g.NewEventPublisher(
 		xkafka.UseKafka(
 			xkafka.Brokers(k.Brokers),
+			xkafka.UserName(k.UserName),
+			xkafka.Password(k.Password),
 			xkafka.ConfigTopic(
 			// xkafka.NumPartitions(4),
 			// xkafka.ReplicationFactor(3),
